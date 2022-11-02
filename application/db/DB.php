@@ -60,20 +60,30 @@ class DB {
         return true;
     }
 
+
     public function sendMessage($name, $message){
         $query = "INSERT INTO `message`(`id`, `message`, `userName`) VALUES(" . "null" . ",'" .  $message .  "','" . $name."')";
         $this->db->query($query);
         return true;
         //INSERT INTO `message`(`id`, `message`, `userName`) VALUES (null,'[value-2]','[value-3]')
     }
+    public function getMessages() {
+        $query = 'SELECT * FROM `message` ';
+        return $this->getArray($query);
+    }
+    public function getChatHash() {
+        $query = 'SELECT chat_hash FROM cash_chat';
+        return $this->db->query($query)->fetchObject();
+    }
+    
+    public function setChatHash($hash) {
+        $query = 'UPDATE cash_chat SET chat_hash="' . $hash . '"';
+        $this->db->query($query);
+        return true;
+    }
 
     public function getUsers() {
         $query = 'SELECT * FROM users';
-        return $this->getArray($query);
-    }
-
-    public function showChat() {
-        $query = 'SELECT * FROM `message` ';
         return $this->getArray($query);
     }
 
