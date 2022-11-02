@@ -26,15 +26,17 @@ class User {
             return $this->db->updateToken($user->id, '');
         }
     }
-    
-    function getUserByLogin($login){
-    $user = $this->db->getUser($login);
-    return $user;
+
+    function sendMessage($name, $message){
+        $this->db->sendMessage($name, $message);
+        return array (
+            "name" => $name,
+            'message' => $message
+        );
     }
 
-   function getUser($token) {
-            return !!$token;
-        }
-}
-
+    function showChat(){
+        
+        return $this->db->showChat();
+    }
 }
