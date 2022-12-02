@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 02 2022 г., 18:53
+-- Время создания: Ноя 27 2022 г., 19:16
 -- Версия сервера: 8.0.30
 -- Версия PHP: 7.2.34
 
@@ -44,10 +44,38 @@ CREATE TABLE `characters` (
 
 CREATE TABLE `gamers` (
   `id` int NOT NULL,
-  `usersId` int NOT NULL,
+  `userId` int NOT NULL,
+  `gamerName` varchar(256) NOT NULL,
   `characterId` int NOT NULL,
   `arms` int NOT NULL,
-  `backpack` int NOT NULL
+  `backpack` int NOT NULL,
+  `score` int NOT NULL,
+  `lobbyId` int DEFAULT NULL,
+  `matchId` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `gamers`
+--
+
+INSERT INTO `gamers` (`id`, `userId`, `gamerName`, `characterId`, `arms`, `backpack`, `score`, `lobbyId`, `matchId`) VALUES
+(14, 123, 'vasya', 0, 0, 0, 0, NULL, 1),
+(17, 123, 'vasya', 0, 0, 0, 666, NULL, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `lobby`
+--
+
+CREATE TABLE `lobby` (
+  `id` int NOT NULL,
+  `ownerId` int NOT NULL,
+  `ownerName` varchar(256) NOT NULL,
+  `amountPlayers` int NOT NULL,
+  `maxAmountPlayers` int NOT NULL,
+  `mode` varchar(256) NOT NULL,
+  `map` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -71,22 +99,22 @@ CREATE TABLE `maps` (
 CREATE TABLE `matches` (
   `id` int NOT NULL,
   `ownerId` int NOT NULL,
+  `amountPlayers` int NOT NULL,
+  `time` int NOT NULL,
+  `endConditional` int NOT NULL,
+  `map` varchar(256) NOT NULL,
   `status` varchar(256) NOT NULL,
-  `timestamp` int NOT NULL,
-  `hash` varchar(256) NOT NULL
+  `timestemp` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
-
 --
--- Структура таблицы `match_gamers`
+-- Дамп данных таблицы `matches`
 --
 
-CREATE TABLE `match_gamers` (
-  `id` int NOT NULL,
-  `matchId` int NOT NULL,
-  `gamerId` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO `matches` (`id`, `ownerId`, `amountPlayers`, `time`, `endConditional`, `map`, `status`, `timestemp`) VALUES
+(1, 123, 6, 0, 0, 'city', 'open', 0),
+(11, 123, 6, 0, 0, 'city', 'open', 0),
+(12, 123, 6, 0, 0, 'city', 'open', 0);
 
 -- --------------------------------------------------------
 
@@ -162,9 +190,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `login`, `password`, `token`, `name`) VALUES
-(1, 'vas', '123', 'b14255fadc1e93f61e7d7c7af5e377c6', 'Vasya'),
-(2, 'pet', '2', NULL, 'Petr'),
-(3, 'mar', '3', NULL, 'Maria'),
+(1, 'vas', '123', '23e2b5b923d0acd72f952ef90dfd5939', 'Vasya'),
+(2, 'pet', '2', '704bd2c28999592db6b9ce08c4d1c267', 'Petr'),
+(3, 'mar', '3', '2fbe160311918180810f937bb106b6eb', 'Maria'),
 (10, 'kris123', '0000', NULL, 'kris');
 
 -- --------------------------------------------------------
@@ -199,6 +227,12 @@ ALTER TABLE `gamers`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Индексы таблицы `lobby`
+--
+ALTER TABLE `lobby`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `maps`
 --
 ALTER TABLE `maps`
@@ -208,12 +242,6 @@ ALTER TABLE `maps`
 -- Индексы таблицы `matches`
 --
 ALTER TABLE `matches`
-  ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `match_gamers`
---
-ALTER TABLE `match_gamers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -255,7 +283,13 @@ ALTER TABLE `characters`
 -- AUTO_INCREMENT для таблицы `gamers`
 --
 ALTER TABLE `gamers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT для таблицы `lobby`
+--
+ALTER TABLE `lobby`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `maps`
@@ -267,13 +301,7 @@ ALTER TABLE `maps`
 -- AUTO_INCREMENT для таблицы `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `match_gamers`
---
-ALTER TABLE `match_gamers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT для таблицы `message`

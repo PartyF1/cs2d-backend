@@ -30,6 +30,17 @@ class User {
                 return $user;
             }
 
+            function setGamer($token){
+                $user = $this->db->setGamer($token);
+                return true;
+                }
+
+
+            function getElementById($element, $id){
+                
+                $user = $this->db->getElementById($element, $id);
+                    return $user;
+                }
 
         function getUser($token) {
             return !!$token;
