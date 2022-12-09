@@ -3,7 +3,7 @@ class DB {
     function __construct()  {
         $host = 'localhost';
         $port = '3306';
-        $name = 'my'; // db name
+        $name = 'cs2d'; // db name
         $user = 'root'; // user name
         $pass = ''; // user password
         try {
@@ -41,7 +41,7 @@ class DB {
 
     public function getUserByToken($token) {
         $query = 'SELECT * FROM users WHERE token="' . $token . '"';
-        return $this->db->query($query)->fetchObject();
+        return ( $this->db->query($query)->fetchObject());
     }
 
     public function setGamer($token) {
@@ -52,22 +52,28 @@ class DB {
         $arms = 0;
         $backpack = 0;
         
-        $query = "INSERT INTO `gamers`(`id`, `userId`, `gamerName` ,`characterId`, `arms`, `backpack`, `score`, `X`, `Y`, `lobbyId`, `matchId`) 
-        VALUES(" ."null".  "," .
-                $userId .  ",'" .
-                $gamerName .  "'," .
-            $characterId.  "," .
-                   $arms.  "," .
-               $backpack.  "," . 
-                     666 .  "," . 
-                     0 . "," . 
-                     0 . "," .
-                  "null".  "," .
-                 "null" .  ")";  
-                 //print_r($query);      
+        $query = "INSERT INTO `gamers` (`id`, `userId`, `gamerName`, `characterId`, `score`, `X`, `Y`, `weapon`, `weaponX`, `weaponY`,
+        `weaponRotation`, `weaponFlipY`, `lobbyId`, `matchId`, `statusInMatch`)
+        VALUES(" ."null". "," .
+        $userId . ",'" .
+        $gamerName . "'," .
+        $characterId. "," .
+        "666". "," .
+        "0". "," .
+        "0". "," .
+        "0". "," .
+        "0". "," .
+        "0". "," .
+        "0". "," .
+        "0". "," .
+        "null". "," .
+        "null" . "," .
+        "0" . ")" ;
+        //print_r($query);
         $this->db->query($query);
         return true;
-    }
+        }
+        
 
     public function getElementById($element, $id) {
         $query = 'SELECT * FROM ' . $element . ' WHERE id="' . $id . '"';
@@ -164,23 +170,24 @@ class DB {
         $query = 'SELECT `id` FROM `matches` WHERE ownerId = ' . $lobbyOwnerId;
         $matchId = $this->db->query($query)->fetchObject()->id;
         $query = 'UPDATE `gamers` SET `lobbyId`='. "null". ',`matchId`= '. $matchId .' WHERE `lobbyId` ='. $lobbyId;
+        //print_r($query);
         $matchId = $this->db->query($query);
        
-        $query = 'DELETE FROM `lobby` WHERE `ownerId` ='.$lobbyOwnerId;
+        $query = 'DELETE FROM `lobby` WHERE `id` ='.$lobbyId;
+        //print_r($query);
          $this->db->query($query);
 
                    return true;          
     }
 
     public function joinToLobby($lobbyId, $token) {
-        print_r($lobbyId, $token);
         $userId = $this->getUserByToken($token)->id;
 
         $query = 'UPDATE `gamers` SET `lobbyId`='. $lobbyId .' WHERE `userId` ='. $userId;
         $this->db->query($query);
         $query = 'UPDATE `lobby`   SET `amountPlayers` = `amountPlayers` +  1  WHERE `id` = '. $lobbyId; 
         $this->db->query($query);
-        
+
         return true;
     }
 
@@ -219,42 +226,63 @@ class DB {
          GROUP_CONCAT(gamers.gamerName) AS players
          FROM (`lobby` LEFT JOIN `gamers` ON lobby.id = gamers.lobbyId)
          GROUP BY lobby.id';
+        
          $query = $this->getArray($query);
-         if ($query) {
-            return $query;
-         } else {
-            return ["hi"];
-         }
+         return $query;
     }
 
-    public function getGamer($token) {
-        $gamerId = $this->getUserByToken($token)->id;
+    public function getGamer($gamerId) {
 
         $query = 'SELECT * FROM `gamers` WHERE userId='.$gamerId;
-        return $query = $this->getArray($query);
+        return $this->db->query($query)->fetchObject();
     }
 
-    public function updateScene($token, $X, $Y) {
+
+    public function updateScene($gamerId, $gamerMatchId, $x, $y, $weapon, $weaponRotation, $weaponFlipY, $weaponY, $weaponX, $bullets, $playerHit) {
+
+        // обновляем координаты и оружие игрока
+        $query = 'UPDATE `gamers` SET `X`='. $x . ',`Y`= '. $y . ',`weaponRotation`= '. $weaponRotation . ',`weapon`= '. $weapon . ',`weaponFlipY`= '. $weaponFlipY . ',`weaponX`='. $weaponX . ',`weaponY`= '. $weaponY .' WHERE `id` ='. $gamerId;
+      // print_r($query);
+         $this->db->query($query);
 
 
-        $userId = $this->getUserByToken($token)->id;
-        $query = 'SELECT * FROM `gamers` WHERE userId='.$userId;
-        
-        $gamer = $this->db->query($query)->fetchObject();
-        
-        $gamerId = $gamer->id;
-        $matchId = $gamer->matchId;
-        
-        $query = 'UPDATE `gamers` SET `X`='. $X . ',`Y`= '. $Y .' WHERE `id` ='. $gamerId;
+            // удаляем массив старых пуль
+        $query = 'DELETE FROM `bullets` WHERE `gamerId` ='.$gamerId;
         $this->db->query($query);
-        $stmt = $this->db->query('SELECT * FROM `gamers` ');
-        $result = array();
-        while($row = $stmt->fetchObject()) {
-        if(($row->matchId == $matchId) && ($row->userId != $userId))
-        $result[] = $row;
-        }
-        
+
+        // добавляем массив текущих пуль
+        // forEach bullet.x bullet.y - цикл по всем пулям
+        for($i = 0; $i<$bullets.end(); $i++)
+        {$query = $query = "INSERT INTO `bullets`(`id`, `gamerId`, `matchId`, `x`, `y`, `rotation`) VALUES(" .
+         "null" .  "," . $gamerId  .  "," .  $gamerMatchId . "," . $bullets[$i]->x . ",". $bullets[$i]->y . ",". $bullets[$i]->rotation . ")";
+         $this->db->query($query);}
+       
+         $query = 'UPDATE `gamers` SET `statusInMatch`=' . 0 .'WHERE `id`='.$playerHit;
+         $this->db->query($query);
         return $result;
         }
+
+
+
+        public function getScene($gamerMatchId) {
+        
+            
+        // массив игроков
+        $query = 'SELECT * FROM `gamers`WHERE matchId = '.$gamerMatchId. ' AND `statusInMatch` = 1';
+        $gamers = $this->getArray($query);
+          
+          //массив пуль
+        $query = 'SELECT * FROM `bullets` WHERE matchId = '.$gamerMatchId;
+        $bullets = $this->getArray($query);
+       
+
+        $array = array(
+            "gamers" => $gamers,
+            "bullets" => $bullets,
+        );
+
+        return $array;
+        }
+
 }
 

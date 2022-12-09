@@ -113,12 +113,52 @@ function getAllLobby($params) {
 }
 
 function getGamer($params) {
+   
     if ($params['token'])
-        return $this->gamer->getGamer($params['token']);
+   { $user = $this->user->getUserByToken($params['token']);
+    return $this->gamer->getGamer($user->id);
+}
 }
 
-function updateScene($params) {
-    //print_r($params['X']);
-        return $this->game->updateScene($params['token'], $params['X'], $params['Y']);
+function updateScene() {
+    $postBody = file_get_contents("php://input");
+    $data = json_decode($postBody);
+    $user = $this->user->getUserByToken($data->token);
+    if ($user){
+        $gamer = $this->gamer->getGamer($user->id);
+        if ($gamer) {
+            return $this->game->updateScene(
+              $gamer->id,
+              $gamer->matchId,
+              $data->player, 
+              $data->bullets,
+              $data->playerHit
+                /* $gamer->id,
+                $gamer->matchId,
+                $data->bullets,
+                $data->X,
+                $data->Y,
+                $data->rotation,
+                $data->gunRotation,
+                $data->gunArm,
+                $data->gunBack*/
+            );
+        }
+    }
 }
+
+
+/*function updateScene($params){
+    $user = $this->user->getUserByToken($params['token']);
+    $gamer = $this->gamer->getGamer($user->id);
+    //print_r($gamer);
+    return $this->game->updateScene($gamer->id,$gamer->matchId, $params['X'], $params['Y'], $params['rotation'], $params['x'], $params['y'], $params['gunRotation'], $params['gunArm'], $params['gunBack']);
+}*/
+
+function getScene($params){
+    $user = $this->user->getUserByToken($params['token']);
+    $gamer = $this->gamer->getGamer($user->id);
+    return $this->game->getScene($gamer->matchId);
+}
+
 }

@@ -25,14 +25,15 @@ require('application/Application.php');
             case 'joinToLobby' : return $app->joinToLobby($params);
             case 'leaveLobby' : return $app->leaveLobby($params);
             case 'getUsersInLobby' : return $app->getUsersInLobby($params);
-            case 'getGamer' : return $app->getgamer($params);
+            case 'getGamer' :  { return $app->getGamer($params);}
             case 'getAllLobby' : return $app->getAllLobby($params);
             case 'deleteLobby' : return $app->deleteLobby($params);
             //inventory
             case 'getInventory' : return $app->getInventory($params);
             case 'setArms' : return $app->setArms($params);
             //game
-            case 'updateScene' : return $app->updateScene($params);
+            case 'updateScene' : {return $app->updateScene();}
+            case 'getScene' : {return $app->getScene($params);}
         }
     }
 }
