@@ -53,13 +53,12 @@ class DB {
         $backpack = 0;
         
         $query = "INSERT INTO `gamers` (`id`, `userId`, `gamerName`, `characterId`, `score`, `X`, `Y`, `weapon`, `weaponX`, `weaponY`,
-        `weaponRotation`, `weaponFlipY`, `lobbyId`, `matchId`, `statusInMatch`)
+        `weaponRotation`, `lobbyId`, `matchId`, `statusInMatch`)
         VALUES(" ."null". "," .
         $userId . ",'" .
         $gamerName . "'," .
         $characterId. "," .
         "666". "," .
-        "0". "," .
         "0". "," .
         "0". "," .
         "0". "," .
@@ -238,10 +237,11 @@ class DB {
     }
 
 
-    public function updateScene($gamerId, $gamerMatchId, $x, $y, $weapon, $weaponRotation, $weaponFlipY, $weaponY, $weaponX, $bullets, $playerHit) {
+   /* public function updateScene($gamerId, $gamerMatchId, $x, $y, $weapon, $weaponRotation, $weaponFlipY, $weaponY, $weaponX, $bullets, $playerHit) {
 
         // обновляем координаты и оружие игрока
-        $query = 'UPDATE `gamers` SET `X`='. $x . ',`Y`= '. $y . ',`weaponRotation`= '. $weaponRotation . ',`weapon`= '. $weapon . ',`weaponFlipY`= '. $weaponFlipY . ',`weaponX`='. $weaponX . ',`weaponY`= '. $weaponY .' WHERE `id` ='. $gamerId;
+        $query = 'UPDATE `gamers` SET `X`='. $x . ',`Y`= '. $y . ',`weaponRotation`= '. $weaponRotation . ',`weapon`= '. $weapon .
+         ',`weaponFlipY`= '. $weaponFlipY . ',`weaponX`='. $weaponX . ',`weaponY`= '. $weaponY .' WHERE `id` ='. $gamerId;
       // print_r($query);
          $this->db->query($query);
 
@@ -257,20 +257,49 @@ class DB {
          "null" .  "," . $gamerId  .  "," .  $gamerMatchId . "," . $bullets[$i]->x . ",". $bullets[$i]->y . ",". $bullets[$i]->rotation . ")";
          $this->db->query($query);}
        
+
          $query = 'UPDATE `gamers` SET `statusInMatch`=' . 0 .'WHERE `id`='.$playerHit;
          $this->db->query($query);
         return $result;
+        }*/
+
+        public function updateGamer($gamerId, $player){
+            // обновляем координаты и оружие игрока
+            $query = 'UPDATE `gamers` SET `X`='. $player->x . ',`Y`= '. $player->y .',`statusInmatch`= 1'. ' WHERE `id` ='. $gamerId;
+            $this->db->query($query);
+        }
+
+        public function updateGamerWeapon($gamerId, $weapon) {
+            $query =  'UPDATE `gamers` SET `weaponRotation`= '. $weapon->rotation  . ',`weapon`= "'. $weapon->name . 
+            '",`weaponX`='. $weapon->x . ',`weaponY`= '. $weapon->y. ' WHERE `id` ='. $gamerId;
+            $this->db->query($query);
+        }
+
+        public function updateBullets($gamerId, $gamerMatchId, $bullets){
+            // удаляем массив старых пуль
+            $query = 'DELETE FROM `bullets` WHERE `gamerId` ='.$gamerId;
+            $this->db->query($query);
+        
+
+            // добавляем массив текущих пуль
+            // forEach bullet.x bullet.y - цикл по всем пулям
+            for($i = 0; $i<count($bullets); $i++)
+            {$query = $query = "INSERT INTO `bullets`(`id`, `gamerId`, `matchId`, `x`, `y`, `rotation`) VALUES(" .
+            "null" .  "," . $gamerId  .  "," .  $gamerMatchId . "," . $bullets[$i]->x . ",". $bullets[$i]->y . ",". $bullets[$i]->rotation . ")";
+            $this->db->query($query);}
         }
 
 
+        public function killPlayer($playerHit){
+            $query = 'UPDATE `gamers` SET `statusInMatch`=' . 0 .'WHERE `id`='.$playerHit;
+            $this->db->query($query);
+        }
 
-        public function getScene($gamerMatchId) {
-        
-            
+
+        public function getScene($gamerMatchId) {  
         // массив игроков
         $query = 'SELECT * FROM `gamers`WHERE matchId = '.$gamerMatchId. ' AND `statusInMatch` = 1';
         $gamers = $this->getArray($query);
-          
           //массив пуль
         $query = 'SELECT * FROM `bullets` WHERE matchId = '.$gamerMatchId;
         $bullets = $this->getArray($query);

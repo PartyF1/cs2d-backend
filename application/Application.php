@@ -121,6 +121,7 @@ function getGamer($params) {
 }
 
 function updateScene() {
+    
     $postBody = file_get_contents("php://input");
     $data = json_decode($postBody);
     $user = $this->user->getUserByToken($data->token);
@@ -132,16 +133,17 @@ function updateScene() {
               $gamer->matchId,
               $data->player, 
               $data->bullets,
-              $data->playerHit
-                /* $gamer->id,
-                $gamer->matchId,
-                $data->bullets,
-                $data->X,
-                $data->Y,
-                $data->rotation,
-                $data->gunRotation,
-                $data->gunArm,
-                $data->gunBack*/
+              $data->playerHit,
+              $data->weapon
+                //$gamer->id,
+                //$gamer->matchId,
+                //$data->bullets,
+                //$data->X,
+                //$data->Y,
+                //$data->rotation,
+                //$data->gunRotation,
+                //$data->gunArm,
+                //$data->gunBack
             );
         }
     }
