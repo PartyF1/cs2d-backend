@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Дек 09 2022 г., 21:29
+-- Время создания: Дек 16 2022 г., 13:10
 -- Версия сервера: 8.0.30
 -- Версия PHP: 7.2.34
 
@@ -35,13 +35,6 @@ CREATE TABLE `bullets` (
   `y` double NOT NULL,
   `rotation` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `bullets`
---
-
-INSERT INTO `bullets` (`id`, `gamerId`, `matchId`, `x`, `y`, `rotation`) VALUES
-(8, 148, 1, 1.5, 1.5, 5);
 
 -- --------------------------------------------------------
 
@@ -76,7 +69,6 @@ CREATE TABLE `gamers` (
   `weaponX` double NOT NULL,
   `weaponY` double NOT NULL,
   `weaponRotation` double NOT NULL,
-  `weaponFlipY` double NOT NULL,
   `lobbyId` int DEFAULT NULL,
   `matchId` int DEFAULT NULL,
   `statusInMatch` tinyint(1) NOT NULL
@@ -86,10 +78,10 @@ CREATE TABLE `gamers` (
 -- Дамп данных таблицы `gamers`
 --
 
-INSERT INTO `gamers` (`id`, `userId`, `gamerName`, `characterId`, `score`, `X`, `Y`, `weapon`, `weaponX`, `weaponY`, `weaponRotation`, `weaponFlipY`, `lobbyId`, `matchId`, `statusInMatch`) VALUES
-(148, 1, 'Vasya', 0, 666, 6, 15, '', 0, 0, 0, 0, NULL, 1, 0),
-(150, 2, 'Petr', 0, 666, 0, 0, '', 0, 0, 0, 0, NULL, 1, 0),
-(151, 3, 'Maria', 0, 666, 0, 0, '', 0, 0, 0, 0, NULL, 1, 1);
+INSERT INTO `gamers` (`id`, `userId`, `gamerName`, `characterId`, `score`, `X`, `Y`, `weapon`, `weaponX`, `weaponY`, `weaponRotation`, `lobbyId`, `matchId`, `statusInMatch`) VALUES
+(276, 3, 'Maria', 0, 666, 187, 783.5, '0', 0, 0, 0, NULL, 128, 1),
+(277, 2, 'Petr', 0, 666, 950.66666666666, 780, 'Pistol', 937.98837048727, 767.0205448918, -2.1849734094541, NULL, 128, 1),
+(278, 2, 'Petr', 0, 666, 0, 0, '0', 0, 0, 0, NULL, 128, 0);
 
 -- --------------------------------------------------------
 
@@ -106,15 +98,6 @@ CREATE TABLE `lobby` (
   `mode` varchar(256) NOT NULL,
   `map` varchar(256) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `lobby`
---
-
-INSERT INTO `lobby` (`id`, `ownerId`, `ownerName`, `amountPlayers`, `maxAmountPlayers`, `mode`, `map`) VALUES
-(19, 1, 'Vasya', 1, 2, 'time', 'city '),
-(20, 1, 'Vasya', 1, 24, 'time', 'city '),
-(21, 1, 'Vasya', 1, 245, 'time', 'city ');
 
 -- --------------------------------------------------------
 
@@ -150,12 +133,8 @@ CREATE TABLE `matches` (
 --
 
 INSERT INTO `matches` (`id`, `ownerId`, `amountPlayers`, `time`, `endConditional`, `map`, `status`, `timestemp`) VALUES
-(28, 1, 6, 0, 0, 'city', 'open', 0),
-(29, 1, 6, 0, 0, 'city', 'open', 0),
-(30, 1, 6, 0, 0, 'city', 'open', 0),
-(31, 1, 6, 0, 0, 'city', 'open', 0),
-(32, 1, 6, 0, 0, 'city', 'open', 0),
-(33, 1, 6, 0, 0, 'city', 'open', 0);
+(128, 2, 3, 0, 0, 'city', 'open', 0),
+(129, 2, 2, 0, 0, 'city', 'open', 0);
 
 -- --------------------------------------------------------
 
@@ -231,9 +210,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `login`, `password`, `token`, `name`) VALUES
-(1, 'vas', '123', '1', 'Vasya'),
-(2, 'pet', '2', 'b67e30a262865ce6d6fdfeb39f5607b9', 'Petr'),
-(3, 'mar', '3', '5bc37ce9a3951fe04347d8791660ae91', 'Maria'),
+(1, 'vas', '123', 'f9959b216d725f6c16612f4779b1477a', 'Vasya'),
+(2, 'pet', '2', '67d8cc3b33e4cbc1cbdc3b635906ae83', 'Petr'),
+(3, 'mar', '3', '5fc07f12d06c6f40765e9cb9a4028ff5', 'Maria'),
 (10, 'kris123', '0000', NULL, 'kris');
 
 -- --------------------------------------------------------
@@ -324,7 +303,7 @@ ALTER TABLE `weapon`
 -- AUTO_INCREMENT для таблицы `bullets`
 --
 ALTER TABLE `bullets`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11900;
 
 --
 -- AUTO_INCREMENT для таблицы `characters`
@@ -336,13 +315,13 @@ ALTER TABLE `characters`
 -- AUTO_INCREMENT для таблицы `gamers`
 --
 ALTER TABLE `gamers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=279;
 
 --
 -- AUTO_INCREMENT для таблицы `lobby`
 --
 ALTER TABLE `lobby`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
 
 --
 -- AUTO_INCREMENT для таблицы `maps`
@@ -354,7 +333,7 @@ ALTER TABLE `maps`
 -- AUTO_INCREMENT для таблицы `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT для таблицы `message`
