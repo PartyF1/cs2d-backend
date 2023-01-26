@@ -67,7 +67,7 @@ class DB {
         "0". "," .
         "null". "," .
         "null" . "," .
-        "0" . ")" ;
+        "1" . ")" ;
         //print_r($query);
         $this->db->query($query);
         return true;
@@ -263,10 +263,12 @@ class DB {
         return $result;
         }*/
 
-        public function updateGamer($gamerId, $player){
+        public function updateGamer($gamerId, $player, $statusInMatch){
             // обновляем координаты и оружие игрока
-            $query = 'UPDATE `gamers` SET `X`='. $player->x . ',`Y`= '. $player->y .',`statusInmatch`= 1'. ' WHERE `id` ='. $gamerId;
-            $this->db->query($query);
+            if ($statusInMatch) {
+                $query = 'UPDATE `gamers` SET `X`='. $player->x . ',`Y`= '. $player->y .',`statusInmatch`= 1'. ' WHERE `id` ='. $gamerId;
+                $this->db->query($query);
+            }    
         }
 
         public function updateGamerWeapon($gamerId, $weapon) {
@@ -291,7 +293,8 @@ class DB {
 
 
         public function killPlayer($playerHit){
-            $query = 'UPDATE `gamers` SET `statusInMatch`=' . 0 .'WHERE `id`='.$playerHit;
+            $query = 'UPDATE `gamers` SET `statusInMatch`=' . 0 .' WHERE `id`='.$playerHit;
+            print_r($query);
             $this->db->query($query);
         }
 
@@ -311,6 +314,15 @@ class DB {
         );
 
         return $array;
+        }
+
+        public function leaveMatch($gamerId, $matchId) {
+            $query = 'UPDATE `gamers` SET `statusInMatch`=' . 1 . ' , `matchId`= ' . 'null' .' WHERE `id` = '.$gamerId;
+            //print_r($query);
+            $this->db->query($query);
+            //$query = 'UPDATE `gamers` SET `matchId`=' . 'null' . ' WHERE `id` = '.$gamerId;
+            //$this->db->query($query);
+            return true;
         }
 
 }

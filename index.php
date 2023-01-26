@@ -34,6 +34,7 @@ require('application/Application.php');
             //game
             case 'updateScene' : {return $app->updateScene();}
             case 'getScene' : {return $app->getScene($params);}
+            case 'leaveMatch' : {return $app->leaveMatch($params);}
         }
     }
 }

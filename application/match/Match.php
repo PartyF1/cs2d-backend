@@ -35,4 +35,8 @@ class Match {
         
         return $this->db->getAllLobby();
     }
+
+    function leaveMatch($gamerId, $matchId){
+        return $this->db->leaveMatch($gamerId, $matchId);
+    }
 }

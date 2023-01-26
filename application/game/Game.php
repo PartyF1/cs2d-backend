@@ -6,8 +6,8 @@ class Game {
     }   
 
 
-    private function updateGamer($gamerId, $player){
-        return $this->db->updateGamer($gamerId, $player);
+    private function updateGamer($gamerId, $player, $statusInMatch){
+        return $this->db->updateGamer($gamerId, $player, $statusInMatch);
     }
 
     private function updateGamerWeapon($gamerId, $weapon) {
@@ -31,10 +31,11 @@ class Game {
         $player, 
         $bullets, 
         $playerHit,
-        $weapon
+        $weapon,
+        $statusInMatch
     ) {
 
-        $this->updateGamer($gamerId, $player);
+        $this->updateGamer($gamerId, $player, $statusInMatch);
 
         $this->updateGamerWeapon($gamerId, $weapon);
 

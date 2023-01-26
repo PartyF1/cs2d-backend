@@ -120,6 +120,11 @@ function getGamer($params) {
 }
 }
 
+function leaveMatch($params) {
+    $gamer = $this->getGamer($params);
+    return $this->match->leaveMatch($gamer->id, $gamer->matchId);
+}
+
 function updateScene() {
     
     $postBody = file_get_contents("php://input");
@@ -134,7 +139,8 @@ function updateScene() {
               $data->player, 
               $data->bullets,
               $data->playerHit,
-              $data->weapon
+              $data->weapon,
+              $data->statusInMatch
                 //$gamer->id,
                 //$gamer->matchId,
                 //$data->bullets,
