@@ -12,6 +12,7 @@ class User {
             if ($login && $password == $user->password) {
                 $token = md5(rand());
                 $this->db->updateToken($user->id, $token);
+                $this->db->resetGamer($user->id);
                 return array (
                     'name' => $user->name,
                     'token' => $token

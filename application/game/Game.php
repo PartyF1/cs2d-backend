@@ -1,35 +1,46 @@
 <?php
-class Game {
+class Game
+{
 
-    function __construct($db) {
+    function __construct($db)
+    {
         $this->db = $db;
-    }   
+    }
 
 
-    private function updateGamer($gamerId, $player, $statusInMatch){
+    private function updateGamer($gamerId, $player, $statusInMatch)
+    {
         return $this->db->updateGamer($gamerId, $player, $statusInMatch);
     }
 
-    private function updateGamerWeapon($gamerId, $weapon) {
+    private function updateGamerWeapon($gamerId, $weapon)
+    {
         if ($weapon)
-        return $this->db->updateGamerWeapon($gamerId, $weapon);
+            return $this->db->updateGamerWeapon($gamerId, $weapon);
     }
 
-    private function updateBullets($gamerId, $gamerMatchId, $bullets){
+    private function updateBullets($gamerId, $gamerMatchId, $bullets)
+    {
         return $this->db->updateBullets($gamerId, $gamerMatchId, $bullets);
     }
 
-    private function killPlayer($playerHit){
-        if($playerHit)
-        return $this->db->killPlayer($playerHit);
+    private function killPlayer($playerHit)
+    {
+        if ($playerHit)
+            return $this->db->killPlayer($playerHit);
+    }
+
+    private function updateSceneHash($gamerMatchId)
+    {
+        return $this->db->updateSceneHash($gamerMatchId);
     }
 
 
     function updateScene(
-        $gamerId, 
-        $gamerMatchId, 
-        $player, 
-        $bullets, 
+        $gamerId,
+        $gamerMatchId,
+        $player,
+        $bullets,
         $playerHit,
         $weapon,
         $statusInMatch
@@ -43,9 +54,11 @@ class Game {
 
         $this->killPlayer($playerHit);
 
+        $this->updateSceneHash($gamerMatchId);
+
         return true;
-     }
-/*
+    }
+    /*
         return $this->db->updateScene(
             $gamerId, 
             $gamerMatchId, 
@@ -60,9 +73,10 @@ class Game {
             $playerHit
         );
         */
-   
 
-    function getScene($gamerMatchId){
-        return $this->db->getScene($gamerMatchId);
+
+    function getScene($gamerMatchId, $sceneHash)
+    {
+        return $this->db->getScene($gamerMatchId, $sceneHash);
     }
 }

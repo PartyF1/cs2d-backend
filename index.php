@@ -40,7 +40,6 @@ require('application/Application.php');
 }
 
  function  answer($data) {
-    //print_r($data);
     if ($data) {
         return array (
             'result' => 'ok',

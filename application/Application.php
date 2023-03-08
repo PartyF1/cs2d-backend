@@ -166,7 +166,7 @@ function updateScene() {
 function getScene($params){
     $user = $this->user->getUserByToken($params['token']);
     $gamer = $this->gamer->getGamer($user->id);
-    return $this->game->getScene($gamer->matchId);
+    return $this->game->getScene($gamer->matchId, $params['sceneHash']);
 }
 
 }
