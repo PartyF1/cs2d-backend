@@ -169,4 +169,7 @@ function getScene($params){
     return $this->game->getScene($gamer->matchId, $params['sceneHash']);
 }
 
+function deleteMatch($params) {
+    return $this->match->deleteMatch($params['token']);
+    }
 }

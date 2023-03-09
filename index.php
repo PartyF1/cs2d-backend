@@ -35,6 +35,7 @@ require('application/Application.php');
             case 'updateScene' : {return $app->updateScene();}
             case 'getScene' : {return $app->getScene($params);}
             case 'leaveMatch' : {return $app->leaveMatch($params);}
+            case 'deleteMatch' : {return $app->startMatch($params);}
         }
     }
 }

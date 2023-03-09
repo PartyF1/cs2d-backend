@@ -50,7 +50,7 @@ class DB
         return ($this->db->query($query)->fetchObject());
     }
 
-    
+
 
     public function getElementById($element, $id)
     {
@@ -97,9 +97,9 @@ class DB
         return $this->getArray($query);
     }
 
-    public function resetGamer($userId) 
+    public function resetGamer($userId)
     {
-        $query = 'UPDATE `gamers` SET `matchId`= ' . 'null' . ', `lobbyId`= ' . 'null' . ' WHERE `userId`= '.$userId;
+        $query = 'UPDATE `gamers` SET `matchId`= ' . 'null' . ', `lobbyId`= ' . 'null' . ' WHERE `userId`= ' . $userId;
         $this->db->query($query);
     }
 
@@ -418,6 +418,15 @@ class DB
         $this->db->query($query);
         //$query = 'UPDATE `gamers` SET `matchId`=' . 'null' . ' WHERE `id` = '.$gamerId;
         //$this->db->query($query);
+        return true;
+    }
+
+    public function deleteMatch($token)
+    {
+        $ownerId = $this->getUserByToken($token)->id;
+
+        $query = 'DELETE FROM `matches` WHERE `ownerId` =' . $ownerId;
+        $this->db->query($query);
         return true;
     }
 }

@@ -39,4 +39,8 @@ class Match {
     function leaveMatch($gamerId, $matchId){
         return $this->db->leaveMatch($gamerId, $matchId);
     }
+
+    function deleteMatch($params) {
+        return $this->db->deleteMatch($token);
+    }
 }
