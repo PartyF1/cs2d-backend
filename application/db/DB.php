@@ -99,7 +99,7 @@ class DB
 
     public function resetGamer($userId)
     {
-        $query = 'UPDATE `gamers` SET `matchId`= ' . 'null' . ', `lobbyId`= ' . 'null' . ' WHERE `userId`= ' . $userId;
+        $query = 'UPDATE `gamers` SET `matchId`= ' . 'null' . ', `lobbyId`= ' . 'null' .  ',`statusInMatch`="alive" WHERE `userId`= ' . $userId;
         $this->db->query($query);
     }
 
@@ -124,7 +124,7 @@ class DB
             "0" . "," .
             "null" . "," .
             "null" . "," .
-            "1" . ")";
+            "alive" . ")";
         //print_r($query);
         $this->db->query($query);
         return true;
@@ -316,13 +316,42 @@ class DB
         return $result;
         }*/
 
-    public function updateGamer($gamerId, $player, $statusInMatch)
+    /*public function updateGamer($gamerId, $player, $statusInMatch)
     {
         // обновляем координаты и оружие игрока
         if ($statusInMatch) {
             $query = 'UPDATE `gamers` SET `X`=' . $player->x . ',`Y`= ' . $player->y . ',`statusInmatch`= 1' . ' WHERE `id` =' . $gamerId;
             $this->db->query($query);
         }
+    }*/
+
+    public function updateGamer($gamerId, $player, $statusInMatch)
+    {
+        switch($statusInMatch) {
+            case "alive": {
+                $query = 'UPDATE gamers SET X = ' . $player->x . ', Y = ' . $player->y . ' WHERE id =' . $gamerId;
+                $this->db->query($query);
+                break;
+            }
+            case "dead": {
+                $query = 'UPDATE gamers SET X = ' . '0' . ', Y= ' . '0' . ', statusInmatch= "respawn"' . ' WHERE id =' . $gamerId;
+                $this->db->query($query);
+                break;
+            }
+            case "respawn": {
+                $query = 'UPDATE gamers SET X = ' . $player->x . ',Y= ' . $player->y . ',statusInmatch= "alive"' . ' WHERE id =' . $gamerId;
+                $this->db->query($query);
+                break;
+            }
+        }
+        /*if ($statusInMatch != "dead" || $statusInMatch !="respawn") {
+            $query = 'SELECT statusInMatch FROM gamers WHERE id = ' . $gamerId;
+            $state = $this->db->query($query);
+            if ($state == "alive") {
+                $query = 'UPDATE gamers SET X=' . $player->x . ',Y= ' . $player->y . ',statusInmatch= `alive`' . ' WHERE id =' . $gamerId;
+                $this->db->query($query);
+            }
+        }*/
     }
 
     public function updateSceneHash($gamerMatchId)
@@ -379,7 +408,7 @@ class DB
 
     public function killPlayer($playerHit)
     {
-        $query = 'UPDATE `gamers` SET `statusInMatch`=' . 0 . ' WHERE `id`=' . $playerHit;
+        $query = 'UPDATE `gamers` SET `statusInMatch`=' . '"dead"' . ' WHERE `id`=' . $playerHit;
         print_r($query);
         $this->db->query($query);
     }
@@ -397,7 +426,7 @@ class DB
             return $array;
         } else {
             // массив игроков
-            $query = 'SELECT * FROM `gamers`WHERE matchId = ' . $gamerMatchId . ' AND `statusInMatch` = 1';
+            $query = 'SELECT * FROM `gamers`WHERE matchId = ' . $gamerMatchId . ' AND `statusInMatch` = "alive"';
             $gamers = $this->getArray($query);
             //массив пуль
             $query = 'SELECT * FROM `bullets` WHERE matchId = ' . $gamerMatchId;
@@ -413,7 +442,7 @@ class DB
 
     public function leaveMatch($gamerId, $matchId)
     {
-        $query = 'UPDATE `gamers` SET `statusInMatch`=' . 1 . ' , `matchId`= ' . 'null' . ' WHERE `id` = ' . $gamerId;
+        $query = 'UPDATE `gamers` SET `statusInMatch`=' . `alive` . ' , `matchId`= ' . 'null' . ' WHERE `id` = ' . $gamerId;
         //print_r($query);
         $this->db->query($query);
         //$query = 'UPDATE `gamers` SET `matchId`=' . 'null' . ' WHERE `id` = '.$gamerId;
