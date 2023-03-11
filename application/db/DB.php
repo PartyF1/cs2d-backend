@@ -99,7 +99,15 @@ class DB
 
     public function resetGamer($userId)
     {
-        $query = 'UPDATE `gamers` SET `matchId`= ' . 'null' . ', `lobbyId`= ' . 'null' .  ',`statusInMatch`="alive", `deaths`= ' . 0 .',`kills`= ' . 0 .' WHERE `userId`= ' . $userId;
+        $query = 'UPDATE gamers SET 
+                                    X = 0, 
+                                    Y = 0, 
+                                    matchId= ' . 'null' . 
+                                    ', lobbyId= ' . 'null' .
+                                    ',statusInMatch="alive", 
+                                    deaths= ' . 0 .
+                                    ',kills= ' . 0 .
+                                    ' WHERE userId= ' . $userId;
         $this->db->query($query);
     }
 
@@ -186,7 +194,7 @@ class DB
          VALUES(" . "null" .  "," .
             $ownerId .  ", '" .
             $ownerName .  "'," .
-            1 .  "," .
+            0 .  "," .
             $maxAmountPlayers .  ",'" .
             $mode .  "','" .
             $map .   " ')";
@@ -522,6 +530,18 @@ class DB
             $query = 'DELETE FROM `matches` WHERE `id` =' . $matchId;
         $this->db->query($query);
 
+        $query = 'UPDATE gamers SET 
+                                    X = 0, 
+                                    Y = 0, 
+                                    matchId= ' . 'null' . 
+                                    ', lobbyId= ' . 'null' .
+                                    ',statusInMatch="alive", 
+                                    deaths= ' . 0 .
+                                    ',kills= ' . 0 .
+                                    ' WHERE id= ' . $gamerId;
+        $this->db->query($query);
+        
+
         return true;
     }
 
@@ -536,9 +556,13 @@ class DB
 
     public function checkEnd($gamerMatchId)
     {
-        $query = 'SELECT * FROM `matches` WHERE matchId = ' . $gamerMatchId;
+        
+        $query = 'SELECT * FROM `matches` WHERE id = ' . $gamerMatchId;
+        print_r($query);
         $match = $this->db->query($query)->fetchObject();
+        
         $time = time();
+        
         switch ($match->mode) {
             case 'time': {
                     if (($time - $match->time) >= 90)
@@ -547,10 +571,11 @@ class DB
                     break;
                 }
             case 'kills': {
+                    
                     $query = 'SELECT * FROM `gamers` WHERE matchId = ' . $gamerMatchId;
                     $gamers = $this->getArray($query);
                     for ($i = 0; $i < count($gamers); $i++) {
-                        if ($gamers[$i]->kills >= 10) {
+                        if ($gamers[$i]->kills >= 2) {
                             $query = 'UPDATE `matches` SET `status`= "finish" WHERE `id` = ' . $gamerMatchId;
                             $this->db->query($query);
                         }
