@@ -206,12 +206,13 @@ class DB
         VALUES(" . "null" .  "," .
             $lobbyOwnerId .  "," .
             $lobbyAmountPlayers .  "," .
-            $Time .  "," .
-            "time" .  ",'" .
+            $Time .  ", '" .
+            $mode .  "','" .
             $map .  "','" .
             "open" .  "'," .
             $a .    "," .
             $a . " )";
+        print_r($query);
         $this->db->query($query);
 
         $query = 'SELECT `id` FROM `matches` WHERE ownerId = ' . $lobbyOwnerId;
