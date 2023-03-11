@@ -124,7 +124,7 @@ class DB
             "0" . "," .
             "null" . "," .
             "null" . "," .
-            "alive" . ")";
+            "'alive'" . ")";
         //print_r($query);
         $this->db->query($query);
         return true;
@@ -426,7 +426,7 @@ class DB
             return $array;
         } else {
             // массив игроков
-            $query = 'SELECT * FROM `gamers`WHERE matchId = ' . $gamerMatchId . ' AND `statusInMatch` = "alive"';
+            $query = 'SELECT * FROM `gamers`WHERE matchId = ' . $gamerMatchId;
             $gamers = $this->getArray($query);
             //массив пуль
             $query = 'SELECT * FROM `bullets` WHERE matchId = ' . $gamerMatchId;
