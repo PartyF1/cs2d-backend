@@ -551,7 +551,7 @@ class DB
                     $gamers = $this->getArray($query);
                     for ($i = 0; $i < count($gamers); $i++) {
                         if ($gamers[$i]->kills >= 10) {
-                            $query = 'UPDATE `matches` SET `status`=' . "finish" . ' WHERE `id` = ' . $gamerMatchId;
+                            $query = 'UPDATE `matches` SET `status`= "finish" WHERE `id` = ' . $gamerMatchId;
                             $this->db->query($query);
                         }
                     }
