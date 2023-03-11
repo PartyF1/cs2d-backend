@@ -24,15 +24,19 @@ class Game
         return $this->db->updateBullets($gamerId, $gamerMatchId, $bullets);
     }
 
-    private function killPlayer($playerHit)
+    private function killPlayer($playerHit, $player)
     {
         if ($playerHit)
-            return $this->db->killPlayer($playerHit);
+            return $this->db->killPlayer($playerHit, $player);
     }
 
     private function updateSceneHash($gamerMatchId)
     {
         return $this->db->updateSceneHash($gamerMatchId);
+    }
+
+    private function checkEnd($gamerMatchId) {
+        return $this->db->checkEnd($gamerMatchId);
     }
 
 
@@ -44,20 +48,21 @@ class Game
         $playerHit,
         $weapon,
         $statusInMatch
-    ) {
-
+        ) {
+        
         $this->updateGamer($gamerId, $player, $statusInMatch);
-
+        
         $this->updateGamerWeapon($gamerId, $weapon);
-
+        
         $this->updateBullets($gamerId, $gamerMatchId, $bullets);
-
-        $this->killPlayer($playerHit);
-
+        
+        $this->killPlayer($playerHit, $gamerId);
+        
         $this->updateSceneHash($gamerMatchId);
-
+        
+        $this->checkEnd($gamerMatchId);
         return true;
-    }
+        }
     /*
         return $this->db->updateScene(
             $gamerId, 
