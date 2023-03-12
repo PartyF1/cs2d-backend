@@ -558,7 +558,6 @@ class DB
     {
         
         $query = 'SELECT * FROM `matches` WHERE id = ' . $gamerMatchId;
-        print_r($query);
         $match = $this->db->query($query)->fetchObject();
         
         $time = time();
