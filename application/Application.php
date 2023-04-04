@@ -172,4 +172,9 @@ function getScene($params){
 function deleteMatch($params) {
     return $this->match->deleteMatch($params['token']);
     }
+
+function getAllRecords($params) {
+    return $this->user->getAllRecords($params['tableName']);
 }
+}
+

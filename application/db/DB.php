@@ -34,7 +34,6 @@ class DB
             $result[] = $row;
             $count++;
         }
-
         return $result;
     }
 
@@ -220,7 +219,6 @@ class DB
             "open" .  "'," .
             $a .    "," .
             $a . " )";
-        print_r($query);
         $this->db->query($query);
 
         $query = 'SELECT `id` FROM `matches` WHERE ownerId = ' . $lobbyOwnerId;
@@ -582,5 +580,11 @@ class DB
                     break;
                 }
         }
+    }
+
+    public function getAllRecords($tableName) {
+        $query = 'SELECT * FROM ' . $tableName;
+        $temp = $this->getArray($query);
+        return $temp;
     }
 }

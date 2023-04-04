@@ -46,4 +46,8 @@ class User {
         function getUser($token) {
             return !!$token;
         }
+
+        function getAllRecords($tableName) {
+            return $this->db->getAllRecords($tableName);
+        }
 }
